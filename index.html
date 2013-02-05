@@ -1,0 +1,388 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <title> myFinance </title>
+        <link rel="stylesheet" href="themes/css/blue.css" title="jQTouch">
+
+        <script src="src/lib/zepto.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="src/jqtouch.min.js" type="text/javascript" charset="utf-8"></script>
+
+        <script src="extensions/jqt.themeswitcher.min.js" type="application/x-javascript" charset="utf-8"></script>
+
+        <script type="text/javascript" charset="utf-8">
+            var jQT = new $.jQTouch({
+                icon: 'jqtouch.png',
+                icon4: 'jqtouch4.png',
+                addGlossToIcon: false,
+                startupScreen: 'jqt_startup.png',
+                statusBar: 'black-translucent',
+                themeSelectionSelector: '#jqt #themes ul',
+                preloadImages: []
+            });
+
+            $(function(){
+
+                $('#swipeme').swipe(function(evt, data) {
+                    var details = !data ? '': '<strong>' + data.direction + '/' + data.deltaX +':' + data.deltaY + '</strong>!';
+                    $(this).html('You swiped ' + details );
+                    $(this).parent().after('<li>swiped!</li>')
+                });
+
+                $('#tapme').tap(function(){
+                    $(this).parent().after('<li>tapped!</li>')
+                });
+
+                $('a[target="_blank"]').bind('click', function() {
+                    if (confirm('This link opens in a new window.')) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                });
+                $('#pageevents').
+                    bind('pageAnimationStart', function(e, info){ 
+                        $(this).find('.info').append('Started animating ' + info.direction + '&hellip;  And the link ' +
+                            'had this custom data: ' + $(this).data('referrer').data('custom') + '<br>');
+                    }).
+                    bind('pageAnimationEnd', function(e, info){
+                        $(this).find('.info').append('Finished animating ' + info.direction + '.<br><br>');
+
+                    });
+                                $('#callback').bind('pageAnimationEnd', function(e, info){
+                    if (!$(this).data('loaded')) {
+                        $(this).append($('<div>Loading</div>').load('ajax.html .info', function() {        
+                            $(this).parent().data('loaded', true);  
+                        }));
+                    }
+                });
+                $('#jqt').bind('turn', function(e, data){
+                    $('#orient').html('Orientation: ' + data.orientation);
+                });
+                
+            });
+        </script>
+        <style type="text/css" media="screen">
+            #jqt.fullscreen #home .info {
+                display: none;
+            }
+            div#jqt #languages {
+                padding: 100px 10px 40px;
+                text-shadow: rgba(0, 0, 0, 0.3) 0px -1px 0;
+                color: #fff;
+                font-size: 13px;
+                text-align: center;
+                background: #068FCE;
+            }
+            div#jqt #languages p {
+                margin-bottom: 8px;
+            }
+            div#jqt #languages a {
+                color: #404040;
+                font-weight: bold;
+                text-decoration: none;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="jqt">
+            <div id="languages">
+                    <h1>Selection Language</h1>
+                        <ul class="rounded">
+                            <li class="arrow"><a href="#" class="goback">English</a></li>
+                            <li class="arrow"><a href="#" class="goback">Espanol</a></li>
+                            <li class="arrow"><a href="#" class="goback">Italiano</a></li>
+                            <li class="arrow"><a href="#" class="goback">Deutsch</a></li>
+                            <li class="arrow"><a href="#" class="goback">Francais</a></li>
+                            <li class="arrow"><a href="#" class="goback">Portugues</a></li>
+                            <li class="arrow"><a href="#" class="goback">中文</a></li>
+                            <li class="arrow"><a href="#" class="goback">日本語</a></li>
+                        </ul>
+            </div>
+            <div id="themes">
+                <div class="toolbar">
+                    <h1>Themes</h1>
+                    <a href="#" class="back">Back</a>
+                </div>
+                <ul class="rounded">
+                </ul>
+            </div>
+            <div id="newbill">
+                <div class="toolbar">
+                    <h1>New Bill</h1>
+                    <a href="#" class="back">Back</a>
+                </div>  
+                <form class="scroll">
+                    <ul class="edit rounded">
+                        <li><input type="text" name="name" placeholder="Title" id="some_name" /></li>
+                        <li><input type="text" name="memo" placeholder="Memo" id="some_name" /></li>
+                        <li><input type="text" name="amount" placeholder="Amount" id="some_name"  /></li>
+                        <li><input type="tel" name="phone" placeholder="Payee" id="some_name" /></li>                    
+                        <li><input type="email" name="email" placeholder="Payee Bank Account" id="some_name" /></li>
+                        <li><input type="url" name="url" placeholder="Url" id="Due" /></li>
+                        <li><textarea placeholder="Additional" ></textarea></li>
+                        <li>Pay Methods: <span class="toggle"><input type="checkbox" /></span></li>
+                        <li class="arrow">
+                            <select id="lol">
+                                <optgroup label="Auto-Pay">
+                                    <option value ="volvo">CitiBank Checking# 76519-8366</option>
+                                    <option value ="saab">CitiBank Saving# 88716-2318</option>
+                                </optgroup>
+                                <optgroup label="Manual-Pay">
+                                    <option value ="mercedes">Alert Reminder</option>
+                                    <option value ="mercedes">No Alert</option>
+                                </optgroup>
+                            </select>
+                        </li>
+                    </ul>
+					<ul class="individual">
+						<li><a target="_blank" href="http://www.google.com">Confirm</a></li>
+                        <li><a target="_blank" href="http://www.wpi.edu">Reset</a></li>
+                    </ul>
+
+                </form>
+            </div>
+			<div id="newaccount">
+                <div class="toolbar">
+                    <h1>New Account</h1>
+                    <a href="#" class="back">Back</a>
+                </div>  
+                <form class="scroll">
+                    <ul class="edit rounded">
+                        <li><input type="text" name="name" placeholder="Bank" id="some_name" /></li>
+                        <li><input type="text" name="memo" placeholder="Account#" id="some_name" /></li>
+                        <li><input type="text" name="amount" placeholder="Password" id="some_name"  /></li>
+                        <li><input type="tel" name="phone" placeholder="Holder" id="some_name" /></li>
+                    </ul>
+					 <ul class="individual">
+						<li><a target="_blank" href="http://www.google.com">Confirm</a></li>
+                        <li><a target="_blank" href="http://www.wpi.edu">Reset</a></li>
+                    </ul>
+                </form>
+            </div>
+			<div id="newstock">
+                <div class="toolbar">
+                    <h1>New Stock</h1>
+                    <a href="#" class="back">Back</a>
+                </div>  
+                <form class="scroll">
+                    <ul class="edit rounded">
+					<li><input type="tel" name="phone" placeholder="Stock#" id="some_name" /></li>
+                        <li><input type="text" name="amount" placeholder="Buy($)" id="some_name"  /></li>
+                        <li>Pay Methods: <span class="toggle"><input type="checkbox" /></span></li>
+                        <li class="arrow">
+                            <select id="lol">
+                                <optgroup label="Auto-Pay">
+                                    <option value ="volvo">CitiBank Checking# 76519-8366</option>
+                                    <option value ="saab">CitiBank Saving# 88716-2318</option>
+                                </optgroup>
+                                <optgroup label="Manual-Pay">
+                                    <option value ="mercedes">Alert Reminder</option>
+                                    <option value ="mercedes">No Alert</option>
+                                </optgroup>
+                            </select>
+                        </li>
+                    </ul>
+					 <ul class="individual">
+						<li><a target="_blank" href="http://www.google.com">Confirm</a></li>
+                        <li><a target="_blank" href="http://www.wpi.edu">Reset</a></li>
+                    </ul>
+                </form>
+            </div>
+			<div id="newtax">
+                <div class="toolbar">
+                    <h1>New Tax Form</h1>
+                    <a href="#" class="back">Back</a>
+                </div>  
+                <form class="scroll">
+                    <ul class="edit rounded">
+                        <li><input type="text" name="name" placeholder="Year" id="some_name" /></li>
+                        <li><input type="text" name="memo" placeholder="Company" id="some_name" /></li>
+						<li><input type="text" name="amount" placeholder="Total Income" id="some_name"  /></li>
+                        <li><input type="text" name="amount" placeholder="State Tax" id="some_name"  /></li>
+                        <li><input type="tel" name="phone" placeholder="Federal Tax" id="some_name" /></li>
+						<li><input type="tel" name="phone" placeholder="Medical Insurance" id="some_name" /></li>
+                    </ul>
+					 <ul class="individual">
+						<li><a target="_blank" href="http://www.google.com">Confirm</a></li>
+                        <li><a target="_blank" href="http://www.wpi.edu">Reset</a></li>
+                    </ul>
+                </form>
+            </div>
+			<div id="newinsur">
+                <div class="toolbar">
+                    <h1>New Insurance</h1>
+                    <a href="#" class="back">Back</a>
+                </div>  
+                <form class="scroll">
+                    <ul class="edit rounded">
+                        <li><input type="text" name="name" placeholder="Company" id="some_name" /></li>
+                        <li><input type="text" name="memo" placeholder="Insurance#" id="some_name" /></li>
+						<li><input type="text" name="amount" placeholder="Agent" id="some_name"  /></li>
+                    </ul>
+					 <ul class="individual">
+						<li><a target="_blank" href="http://www.google.com">Confirm</a></li>
+                        <li><a target="_blank" href="http://www.wpi.edu">Reset</a></li>
+                    </ul>
+                </form>
+            </div>
+			<div id="newmor">
+                <div class="toolbar">
+                    <h1>New Mortgage</h1>
+                    <a href="#" class="back">Back</a>
+                </div>  
+                <form class="scroll">
+                    <ul class="edit rounded">
+                        <li><input type="text" name="name" placeholder="Company" id="some_name" /></li>
+                        <li><input type="text" name="memo" placeholder="Mortgage#" id="some_name" /></li>
+						<li><input type="text" name="amount" placeholder="Agent" id="some_name"  /></li>
+                    </ul>
+					 <ul class="individual">
+						<li><a target="_blank" href="http://www.google.com">Confirm</a></li>
+                        <li><a target="_blank" href="http://www.wpi.edu">Reset</a></li>
+                    </ul>
+                </form>
+            </div>
+			<div id="personal">
+                <div class="toolbar">
+                    <h1>Personal Info</h1>
+                    <a href="#" class="back">Back</a>
+                </div>  
+                <form class="scroll">
+                    <ul class="edit rounded">
+                        <li><input type="text" name="name" placeholder="Name" id="some_name" /></li>
+                        <li><input type="text" name="memo" placeholder="Password" id="some_name" /></li>
+						<li><input type="text" name="memo" placeholder="Confirm Password" id="some_name" /></li>
+						<li><input type="text" name="amount" placeholder="Birthday Date" id="some_name"  /></li>
+						<li><input type="text" name="name" placeholder="Phone" id="some_name" /></li>
+                        <li><input type="text" name="memo" placeholder="Address" id="some_name" /></li>
+                    </ul>
+					 <ul class="individual">
+						<li><a target="_blank" href="http://www.google.com">Confirm</a></li>
+                        <li><a target="_blank" href="http://www.wpi.edu">Reset</a></li>
+                    </ul>
+                </form>
+            </div>
+            <div id="home" class="current">
+                <div class="toolbar">
+                    <h1> MyFinance! </h1>
+                    <a class="button slideup" id="infoButton" href="#languages">Language</a>
+                </div>
+                <div class="scroll">
+                    <ul class="rounded">
+                        <li class="arrow"><a href="#bank">Banking </a> </li>
+                        <li class="arrow"><a href="#bills">Pay Bills </a></li>
+                        <li class="arrow"><a href="#invest">Investment </a></li>
+                        <li class="arrow"><a href="#tax">Tax </a></li>
+                        <li class="arrow"><a href="#insurance">Insurance </a> </li>
+                        <li class="arrow"><a href="#mortgage">Mortgage </a></li>
+						<li class="arrow"><a href="#personal">Personal Info. </a></li>
+                        <li class="arrow"><a href="#themes">Themes </a></li>
+                    </ul>
+                    <ul class="individual">
+                        <li><a target="_blank" href="http://www.google.com">Need Help</a></li>
+                        <li><a target="_blank" href="http://www.wpi.edu">Contact</a></li>
+                    </ul>
+                    <div class="info">
+                        <p>2012 (C) WPI CS HWK - Jun</p>
+                    </div>
+                </div>
+            </div>
+            <div id="bank">
+                <div class="toolbar">
+                    <h1>Banking</h1>
+                    <a href="#" class="back">Back</a>
+					<a class="button slideup" id="infoButton" href="#newaccount">New Account</a>
+                </div>
+                <ul class="metal scroll">
+                    <li class="arrow"><a href="#checking"><small>$ 3693.27</small>  Checking <em>CitiBank #20103487-230</em></a></li>
+                    <li class="arrow"><a href="#saving"><small>$ 1500.00</small>  Saving  <em>CitiBank #65193482-817</em></a></li>
+                </ul>
+            </div>
+            <div id="checking">
+                <div class="toolbar">
+                    <h1>Checking</h1>
+                    <a href="#" class="back">Back</a>
+                </div>
+                <ul class="plastic scroll">
+                    <li><a href="#">Sunny Gas #01609 <small>4/18/2012</small> <small class="counter">$ 30.00</small></a></li>
+                    <li><a href="#">Dragon Food #01609 <small>4/18/2012</small> <small class="counter">$ 18.01</small></a></li>
+                    <li><a href="#">Noble Book #01608 <small>4/16/2012</small> <small class="counter">$ 24.78</small></a></li>
+                    <li><a href="#">Amazon.com #10245 <small>4/15/2012</small> <small class="counter">$ 59.99</small></a></li>
+                    <li><a href="#">KFC DOR #02126 <small>4/13/2012</small> <small class="counter">$ 12.36</small></a></li>
+                    <li><a href="#">Sunny Gas #01609 <small>4/13/2012</small> <small class="counter">$ 40.00</small></a></li>
+                    <li><a href="#">NStar Bill #02118 <small>4/11/2012</small> <small class="counter">$ 62.83</small></a></li>
+                </ul>
+            </div>
+            <div id="saving">
+                <div class="toolbar">
+                    <h1>Saving</h1>
+                    <a href="#" class="back">Back</a>
+                </div>
+                <ul class="plastic scroll">
+                    <li><a href="#">Citi Annual Fee <small>1/25/2012</small> <small class="counter">$ 125.00</small></a></li>
+                </ul>
+            </div>
+            <div id="bills">
+                <div class="toolbar">
+                    <h1>Bills</h1>
+                    <a href="#" class="back">Back</a>
+                    <a class="button slideup" id="infoButton" href="#newbill">New Bill</a>
+                </div>
+                <ul class="metal scroll">
+                    <li class="arrow"><a href="#"><small>Due Apr 26</small>  $ 49.99 <em>Verizon High-Speed Internet</em></a></li>
+                    <li class="arrow"><a href="#"><small>Paid</small>  $ 23.48 <em>NationalGrid Electricity</em></a></li>
+                    <li class="arrow"><a href="#"><small>Due Apr 29</small>  $ 36.99 <em>T-Mobile Cell Phone</em></a></li>
+                    <li class="arrow"><a href="#"><small>Paid</small>  $ 67.13 <em>NStar Gas</em></a></li>
+                    <li class="arrow"><a href="#"><small>Paid</small> $ 430.00 <em>Housing: Room Rent</em></a></li>
+                </ul>
+            </div>
+             <div id="invest">
+                <div class="toolbar">
+                    <h1>Stocks</h1>
+                    <a href="#" class="back">Back</a>
+					<a class="button slideup" id="infoButton" href="#newstock">New Stock</a>
+                </div>
+                <ul class="metal scroll">
+                    <li class="arrow"><a href="#"><small>GOOG</small>  $ 678.26 <em>Google Inc.</em></a></li>
+                    <li class="arrow"><a href="#"><small>AAPL</small>  $ 723.83 <em>Apple Inc.</em></a></li>
+                    <li class="arrow"><a href="#"><small>MSFT</small>  $ 38.08 <em>Microsoft Corp.</em></a></li>
+                    <li class="arrow"><a href="#"><small>FB</small>  $ 670.14 <em>Facebook Inc.</em></a></li>
+                </ul>
+            </div>
+            <div id="tax">
+                <div class="toolbar">
+                    <h1>Tax</h1>
+                    <a href="#" class="back">Back</a>
+					<a class="button slideup" id="infoButton" href="#newtax">New Form</a>
+                </div>
+                <ul class="metal scroll">
+                    <li class="arrow"><a href="#checking"><small>2011</small>  $ 628.00 <em>Personal Tax Information</em></a></li>
+                    <li class="arrow"><a href="#saving"><small>2010</small>  $ 455.00  <em>Personal Tax Information</em></a></li>
+                </ul>
+            </div>
+            <div id="insurance">
+                <div class="toolbar">
+                    <h1>Insurance</h1>
+                    <a href="#" class="back">Back</a>
+					<a class="button slideup" id="infoButton" href="#newinsur">New Insurance</a>
+                </div>
+                <ul class="metal scroll">
+                    <li class="arrow"><a href="#checking"><small>$ 800.00</small>  Health <em>New England Health Progeam</em></a></li>
+                    <li class="arrow"><a href="#saving"><small>$ 1325.00</small>  Car  <em>Cybertron Auto Insurance</em></a></li>
+                </ul>
+            </div>
+            <div id="mortgage">
+                <div class="toolbar">
+                    <h1>Mortgage</h1>
+                    <a href="#" class="back">Back</a>
+					<a class="button slideup" id="infoButton" href="#newmor">New Mortgage</a>
+                </div>
+                <ul class="metal scroll">
+                    <li class="arrow"><a href="#carloan"><small>$ 700.00</small>  Paid  <em>Kelly R Mortgage Inc. - Car</em></a></li>
+                </ul>
+            </div>
+        </div>
+    </body>
+</html>
+
